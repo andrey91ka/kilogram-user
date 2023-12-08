@@ -29,8 +29,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findUser(UUID id) {
-        User user =  userRepository.findById(id)
+        User user =  userRepository.findById(id).filter(el -> el.getStatusUser() != StatusUser.ACTIVE)
                 .orElseThrow(() -> new EntityNotFoundException("Not found User with id: " + id));
+
         return userMapper.toDto(user);
     }
 
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UUID id, UserDto userDto) {
-        User user = userRepository.findById(id)
+        User user = userRepository.findById(id).filter(el -> el.getStatusUser() != StatusUser.ACTIVE)
                 .orElseThrow(() -> new EntityNotFoundException("Not found User with id: " + id));
         userMapper.toDto(
                 userRepository.save(
